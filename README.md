@@ -14,6 +14,10 @@ Character consistency, motion and lip sync depend on the selected models and ref
 
 ## Windows setup
 
+**New laptop:** follow [Windows 11 setup](WINDOWS_SETUP.md). The hardware-aware installer supports image generation by default and optional H3 video downloads.
+
+### Manual setup
+
 1. Install Python, Git, Ollama, ComfyUI and FFmpeg as needed.
 2. Create a Python environment: `python -m venv .venv`.
 3. Install dependencies: `.venv\Scripts\python.exe -m pip install -r requirements-director.txt`.

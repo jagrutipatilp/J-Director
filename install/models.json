@@ -1,0 +1,62 @@
+[
+  {
+    "group": "images",
+    "repo": "unsloth/Qwen-Image-2512-GGUF",
+    "file": "qwen-image-2512-Q4_K_M.gguf",
+    "folder": "unet"
+  },
+  {
+    "group": "images",
+    "repo": "unsloth/Qwen-Image-Edit-2511-GGUF",
+    "file": "qwen-image-edit-2511-Q4_K_M.gguf",
+    "folder": "unet"
+  },
+  {
+    "group": "images",
+    "repo": "unsloth/Qwen2.5-VL-7B-Instruct-GGUF",
+    "file": "Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf",
+    "folder": "text_encoders"
+  },
+  {
+    "group": "images",
+    "repo": "unsloth/Qwen2.5-VL-7B-Instruct-GGUF",
+    "file": "mmproj-BF16.gguf",
+    "folder": "text_encoders"
+  },
+  {
+    "group": "images",
+    "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+    "file": "split_files/vae/qwen_image_vae.safetensors",
+    "folder": "vae"
+  },
+  {
+    "group": "video",
+    "repo": "Comfy-Org/MiniMax-H3",
+    "file": "diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+    "folder": "diffusion_models"
+  },
+  {
+    "group": "video",
+    "repo": "nif0/Qwen3-VL-32B-Instruct-MiniMax-H3-GGUF",
+    "file": "Qwen3-VL-32B-Instruct-MiniMax-H3-L0-49-Q4_K_M.gguf",
+    "folder": "text_encoders"
+  },
+  {
+    "group": "video",
+    "repo": "nif0/Qwen3-VL-32B-Instruct-MiniMax-H3-GGUF",
+    "file": "Qwen3-VL-32B-Instruct-MiniMax-H3-L0-49-mmproj-BF16.gguf",
+    "folder": "text_encoders"
+  },
+  {
+    "group": "video",
+    "repo": "Comfy-Org/MiniMax-H3",
+    "file": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+    "folder": "vae"
+  },
+  {
+    "group": "video",
+    "repo": "Comfy-Org/MiniMax-H3",
+    "file": "vae/minimax_h3_audio_vae_fp32.safetensors",
+    "folder": "vae"
+  }
+]

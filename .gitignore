@@ -34,3 +34,5 @@ video_director_agent/i2v_template.json
 *.ckpt
 .DS_Store
 Thumbs.db
+
+install/models.lock.local.json
