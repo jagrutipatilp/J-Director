@@ -1,0 +1,15 @@
+{
+  "ollama_url": "http://127.0.0.1:11434",
+  "ollama_model": "gemma4:e4b",
+  "comfy_url": "http://127.0.0.1:8190",
+  "generator": "comfyui",
+  "existing_runtime": "C:/src/ai drama",
+  "image_resolution": [
+    576,
+    1024
+  ],
+  "video_resolution": [
+    480,
+    832
+  ]
+}

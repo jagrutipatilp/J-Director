@@ -1,0 +1,36 @@
+# Local settings and credentials
+.env
+.env.*
+!.env.example
+**/settings.json
+**/user_settings.json
+**/.remote-owner.json
+*credentials*
+*token*.json
+# User projects, references, models and runtime state
+projects/
+library/
+local-models/
+tools/
+logs/
+.stock-cache/
+.desktop-profile/
+.venv/
+**/__pycache__/
+*.py[cod]
+*.upstream.json
+director_studio/queue.json
+director_studio/generation-maintenance.json
+video_director_agent/state/
+video_director_agent/output/
+video_director_agent/logs/
+video_director_agent/i2v_template.json
+*.mp4
+*.webm
+*.wav
+*.mp3
+*.gguf
+*.safetensors
+*.ckpt
+.DS_Store
+Thumbs.db
