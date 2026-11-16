@@ -114,3 +114,13 @@
 #outlineEditDialog .section-title{margin-bottom:10px}
 #outlineEditText{min-height:40vh;max-height:55vh;resize:vertical;font-size:13px}
 #outlineEditDialog .button-row{position:sticky;bottom:0;background:var(--panel);padding-top:10px}
+
+#generationSettingsDialog{width:min(620px,92vw);max-height:90vh;overflow:auto}#generationSettingsForm{display:grid;gap:10px}#generationSettingsForm label{display:grid;gap:5px}.shot-camera-choices{padding:12px;border-top:1px solid #444}.shot-camera-choices fieldset{border:0;padding:8px 0}.shot-camera-choices legend{font-size:12px;color:#c7bdcf}.camera-option-chips{display:flex;flex-wrap:wrap;gap:5px}.camera-option-chip{display:flex;align-items:center;gap:5px;font-size:11px;padding:5px 7px;border:1px solid #51465e;border-radius:8px;cursor:pointer}.camera-option-chip:has(input:checked){background:#493359;border-color:#b99bd8}.camera-option-chip input{width:13px;height:13px;margin:0}
+
+/* Keep planning visible without inventing a percentage. */
+.logs-panel>progress#workProgress:indeterminate{background:linear-gradient(100deg,#13202d 20%,#397de8 42%,#47c4be 50%,#397de8 58%,#13202d 80%);background-size:260% 100%;animation:director-planning-progress 1.6s linear infinite}
+.logs-panel>progress#workProgress:indeterminate::-webkit-progress-bar{background:transparent}
+.logs-panel>progress#workProgress:indeterminate::-webkit-progress-value{background:transparent}
+.logs-panel>progress#workProgress:indeterminate::-moz-progress-bar{background:linear-gradient(90deg,#397de8,#47c4be)}
+@keyframes director-planning-progress{from{background-position:130% 0}to{background-position:-130% 0}}
+@media(prefers-reduced-motion:reduce){.logs-panel>progress#workProgress:indeterminate{animation:none;background-position:50% 0}}

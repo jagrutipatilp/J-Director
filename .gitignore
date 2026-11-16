@@ -36,3 +36,5 @@ video_director_agent/i2v_template.json
 Thumbs.db
 
 install/models.lock.local.json
+
+director_studio/generation-settings.json

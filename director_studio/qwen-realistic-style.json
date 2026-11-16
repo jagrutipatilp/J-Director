@@ -1,0 +1,5 @@
+{
+  "name": "Realistic cinematic photo",
+  "prompt": "REALISTIC PHOTO STYLE (takes priority over conflicting rendering-style words): Render as a believable cinematic photograph with natural facial anatomy, realistic skin texture, individual hair strands, physically plausible fabric, lighting and shadows. Preserve each reference subject's identity, age, hairstyle, outfit and accessories. Translate illustrated references into plausible real people while retaining recognizable features. Follow the requested scene, action, framing and camera angle. Natural colors, clear focused subjects, detailed eyes and hands. No anime, manhwa, webtoon, drawn outlines, cel shading, plastic skin, 3D render, text or watermark.",
+  "negative": "anime, manga, manhwa, webtoon, illustration, drawn outlines, cel shading, cartoon, 3d render, plastic skin, blurry face, distorted anatomy, text, watermark"
+}

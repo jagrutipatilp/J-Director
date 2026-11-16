@@ -1,0 +1,182 @@
+[
+  [
+    "direction",
+    "View direction",
+    [
+      [
+        "front",
+        "Front",
+        "View the characters directly from the front.",
+        "Face and chest point toward the camera."
+      ],
+      [
+        "back",
+        "Back",
+        "View the characters from behind; show the backs of their heads and bodies.",
+        "Camera follows behind the characters."
+      ],
+      [
+        "left",
+        "Left side",
+        "Left-side profile view of the characters.",
+        "Show the left cheek in profile."
+      ],
+      [
+        "right",
+        "Right side",
+        "Right-side profile view of the characters.",
+        "Show the right cheek in profile."
+      ],
+      [
+        "front34",
+        "Front three-quarter",
+        "Front three-quarter view, about 45 degrees around the characters.",
+        "See the front and one side of the face."
+      ],
+      [
+        "rear34",
+        "Rear three-quarter",
+        "Rear three-quarter view, about 45 degrees from behind.",
+        "See the back and a small portion of the profile."
+      ]
+    ]
+  ],
+  [
+    "height",
+    "Camera height",
+    [
+      [
+        "eye",
+        "Eye level",
+        "Camera at the main character's eye level.",
+        "Natural height, looking straight across."
+      ],
+      [
+        "above",
+        "Slightly above",
+        "Camera slightly above eye level, gently looking down.",
+        "A subtle downward view of the face."
+      ],
+      [
+        "high",
+        "High angle",
+        "High camera angle looking down at the scene.",
+        "Look down on the subject and see more floor."
+      ],
+      [
+        "overhead",
+        "Overhead / bird's-eye",
+        "Camera directly overhead, looking vertically down at the scene.",
+        "Top-down composition, not merely a raised camera."
+      ],
+      [
+        "low",
+        "Low angle",
+        "Low camera angle looking up at the characters.",
+        "Look upward from below the subject."
+      ],
+      [
+        "ground",
+        "Ground / worm's-eye",
+        "Camera at ground level, looking steeply upward.",
+        "Very low viewpoint near the floor."
+      ]
+    ]
+  ],
+  [
+    "framing",
+    "Framing",
+    [
+      [
+        "extremeclose",
+        "Extreme close-up",
+        "Extreme close-up on a small facial detail such as the eyes.",
+        "A small facial detail fills the frame."
+      ],
+      [
+        "close",
+        "Face close-up",
+        "Face close-up, framing the full face.",
+        "Frame mostly the head and face."
+      ],
+      [
+        "shoulders",
+        "Head and shoulders",
+        "Head-and-shoulders framing.",
+        "Head, shoulders and upper chest are visible."
+      ],
+      [
+        "waist",
+        "Waist-up",
+        "Waist-up medium shot.",
+        "Frame the character from the waist upward."
+      ],
+      [
+        "knees",
+        "Knees-up",
+        "Knees-up medium-long shot.",
+        "Frame from just above the knees upward."
+      ],
+      [
+        "full",
+        "Full body",
+        "Full-body shot with the entire character visible, including feet.",
+        "Keep the head and both feet in the frame."
+      ],
+      [
+        "wide",
+        "Wide scene",
+        "Wide establishing shot emphasizing the environment around the characters.",
+        "Characters are smaller within a visible setting."
+      ],
+      [
+        "extremewide",
+        "Extreme wide scene",
+        "Extreme wide establishing shot; characters appear very small in the landscape.",
+        "The location dominates the composition."
+      ]
+    ]
+  ],
+  [
+    "viewpoint",
+    "Scene viewpoint",
+    [
+      [
+        "ots",
+        "Over-the-shoulder",
+        "Over-the-shoulder composition: foreground shoulder and back of head frame another character.",
+        "Look past one person toward another."
+      ],
+      [
+        "pov",
+        "Character POV",
+        "First-person point of view through a character's eyes.",
+        "See what the character sees."
+      ],
+      [
+        "door",
+        "Through doorway / window",
+        "Frame the scene through a doorway or window opening.",
+        "Use an architectural opening as a foreground frame."
+      ]
+    ]
+  ],
+  [
+    "tilt",
+    "Camera tilt",
+    [
+      [
+        "level",
+        "Level",
+        "Keep the camera level and vertical lines upright.",
+        "Straight horizon and upright vertical lines."
+      ],
+      [
+        "dutch",
+        "Tilted / Dutch angle",
+        "Use a deliberate Dutch camera tilt of about 15 degrees.",
+        "Tilt the scene diagonally to suggest tension."
+      ]
+    ]
+  ]
+]

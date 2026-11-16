@@ -269,6 +269,16 @@ def generate_comfy(s,n,report):
     prior=continuity.previous_frame(s,n) if kind=='qwen' and n['kind']=='keyframe' and len(paths)<3 else None
     if prior:
         paths.append(prior['path']);legend.append('Reference image '+str(len(paths))+': approved prior-episode output for continuity; retain the uploaded master identity');report('Using approved previous-episode output for continuity')
+    from . import generation_settings as profiles
+    prefs=profiles.load()
+    styled_prompt=n['prompt'];styled_negative=n.get('negative','')
+    if kind=='qwen':
+        styled_prompt,styled_negative,paths=profiles.style_prepare(cfg,prefs,styled_prompt,styled_negative,paths,work)
+    shot_camera=n.get('camera_choices',{})
+    if kind=='h3' and not shot_camera:shot_camera=s['nodes'].get(n.get('depends_on'),{}).get('camera_choices',{})
+    camera_words=profiles.camera_prompt(shot_camera)
+    if camera_words:styled_prompt+='\n'+camera_words
+    store.atomic(work/'generation-settings.json',{'profile':prefs,'camera':shot_camera,'style_reference':kind=='qwen' and prefs['style']=='manhwa','reference_paths':list(map(str,paths))})
     variant='qwen_text' if kind=='qwen' and not paths else kind
     specpath=store.ROOT/'director_studio/workflows'/(variant+'.json')
     if not specpath.is_file():raise RuntimeError('The local '+variant+' workflow is not configured yet; no generation was submitted')
@@ -286,15 +296,15 @@ def generate_comfy(s,n,report):
         path=Path(path)
         with path.open('rb') as f:
             r=requests.post(base+'/upload/image',files={'image':(uuid.uuid4().hex+path.suffix,f)},data={'overwrite':'false'},timeout=60);r.raise_for_status();v=r.json();refs.append('/'.join(x for x in (v.get('subfolder'),v['name']) if x))
-    draft=s.get('quality')=='draft';width,height=tuple(cfg.get('video_resolution',[480,832])) if kind=='h3' else tuple(cfg.get('image_resolution',[576,1024]))
-    prompt=n['prompt']
+    draft=s.get('quality')=='draft';width,height=profiles.dimensions(kind,prefs)
+    prompt=styled_prompt
     if n['kind'] in ('keyframe','clip') and n.get('incidental_figures'):
         prompt+='\nIncidental scene details, not separate identity references: '+'; '.join(name+': '+text for name,text in n['incidental_figures'].items())
     if kind=='h3':
         if n.get('dialogue'):prompt+='\nExact dialogue: <d>[English] '+n['dialogue']+'</d>'
         if n.get('sound'):prompt+='\noverall_soundscape: '+n['sound']
     elif legend:prompt+='\nReference guide: '+' | '.join(legend)+'\nRender one coherent scene, never a collage or labeled sheet. Build the named subjects from the identity references. Background references describe the environment only; people already visible there are not character identity references. Preserve facial identity while applying explicitly requested outfit or hairstyle edits.'
-    fields={'prompt':prompt,'negative':n.get('negative','') or ('different face, inconsistent character, duplicate person, distorted face, malformed hands, blurry face, low quality, plastic skin, over-sharpened, oversaturated, text, watermark, incorrect anatomy' if kind=='qwen' else ''),'seed':n.get('seed',8831 if kind=='h3' else 42),'seconds':int(n.get('seconds',4)),'steps':(12 if draft else 20) if kind=='h3' else (12 if draft else 30),'guidance':4.0,'width':width,'height':height}
+    fields={'prompt':prompt,'negative':styled_negative or ('different face, inconsistent character, duplicate person, distorted face, malformed hands, blurry face, low quality, plastic skin, over-sharpened, oversaturated, text, watermark, incorrect anatomy' if kind=='qwen' else ''),'seed':n.get('seed',8831 if kind=='h3' else 42),'seconds':int(n.get('seconds',4)),'steps':20 if kind=='h3' else (40 if width*height>=1000000 else 30),'guidance':4.0,'width':width,'height':height}
     camera=n.get('camera_angle') if kind=='qwen' else None
     if camera:
         angles={'high':'<sks> front view high-angle shot','left':'<sks> front-left quarter view eye-level shot','right':'<sks> front-right quarter view eye-level shot','low':'<sks> front view low-angle shot','close':'<sks> front view eye-level shot','reverse':'<sks> back view eye-level shot'}
@@ -302,6 +312,8 @@ def generate_comfy(s,n,report):
         distance='close-up' if camera=='close' else 'wide shot' if s['nodes'].get(n.get('parent'),{}).get('kind')=='location' else 'medium shot'
         fields['prompt']=angles[camera]+' '+distance+'\n'+fields['prompt']
     graph=comfy_workflows.build(spec,fields,refs,kind)
+    graph=profiles.apply_graph(graph,spec,kind,prefs,schema)
+    report('Lora profile: '+prefs['style']+' / '+prefs['image_mode' if kind=='qwen' else 'video_mode']+' / '+str(width)+' x '+str(height))
     if camera:
         choices=schema.get('LoraLoaderModelOnly',{}).get('input',{}).get('required',{}).get('lora_name',[[]])[0]
         lora=next((name for name in choices if Path(name).name=='qwen-image-edit-2511-multiple-angles-lora.safetensors'),None)

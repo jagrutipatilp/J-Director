@@ -55,6 +55,39 @@ async def missing_file(request,error):return JSONResponse({'detail':'Project or 
 
 @app.get('/')
 def index():return FileResponse(Path(__file__).parent/'static/index.html')
+@app.post('/api/work/stop-all')
+def stop_all_work():
+    import requests
+    cancelled=[]
+    for pid in sorted({j['project'] for j in jobs.pending()}):
+        try:jobs.control(pid,'stop');cancelled.append(pid)
+        except ValueError:pass
+    warnings=[];base=engines.settings()['comfy_url'].rstrip('/')
+    for endpoint,payload in [('/queue',{'clear':True}),('/interrupt',{})]:
+        try:requests.post(base+endpoint,json=payload,timeout=5).raise_for_status()
+        except requests.RequestException:warnings.append('Could not reach ComfyUI '+endpoint+'; local queues are cancelled.')
+    return {'cancelled_projects':cancelled,'warnings':warnings}
+
+@app.get('/api/generation-settings')
+def get_generation_settings():
+    from . import generation_settings as profiles
+    return {'settings':profiles.load(),'camera_groups':profiles.CAMERAS,'image_formats':profiles.SIZES}
+
+@app.patch('/api/generation-settings')
+def update_generation_settings(data:dict):
+    if jobs.pending():raise ValueError('Stop or finish active work before changing generation settings')
+    from . import generation_settings as profiles
+    return profiles.save(data)
+
+@app.post('/api/projects/{pid}/nodes/{nid}/camera-auto')
+def auto_camera(pid:str,nid:str):
+    from . import generation_settings as profiles
+    s=store.load(pid);n=s['nodes'][nid]
+    if n['kind'] not in ('keyframe','clip') or n['status'] in ('running','queued','succeeded','saved') or n['locked']:raise ValueError('Select an editable keyframe or video; use Redo for a completed take')
+    options={g:[r[0] for r in rows] for g,_,rows in profiles.CAMERAS}
+    result=engines.chat('Choose camera options for this shot. Return ONLY a JSON object with keys from the allowed groups and values from their allowed choices. Follow explicit camera wording in the prompt. Do not add people or alter actions.',json.dumps({'allowed':options,'title':n['title'],'prompt':n['prompt']},ensure_ascii=False),True)
+    return store.edit(pid,nid,{'camera_choices':profiles.camera_validate(result)})
+
 @app.get('/api/health')
 def health():return engines.service_health()
 @app.get('/api/library')
@@ -190,18 +223,24 @@ def action(pid:str,data:dict):
         return {'job':jobs.enqueue(pid,command,[nid] if nid else [],str(data.get('instruction','')))}
     raise ValueError('Unknown action')
 
+@app.post('/api/projects/{pid}/keyframes/{nid}/upload')
 @app.post('/api/projects/{pid}/references/{nid}/upload')
 async def upload_reference(pid:str,nid:str,file:UploadFile=File(...)):
     s=store.load(pid);n=s['nodes'][nid]
-    if n['kind']!='reference' or n['status'] in ('queued','running','succeeded') or n['locked']:raise ValueError('Select an editable reference box')
+    if n['kind'] not in ('reference','keyframe') or n['status'] in ('queued','running','succeeded') or n['locked']:raise ValueError('Select an editable image box; use Redo first to replace an existing take')
+    if n['kind']=='keyframe' and any(c.get('depends_on')==nid and c['status'] in ('queued','running','succeeded','saved') for c in s['nodes'].values()):raise ValueError('Use Redo on this keyframe first to reset its dependent video')
     raw=await file.read(30*1024*1024+1)
     if len(raw)>30*1024*1024:raise ValueError('Use an image smaller than 30 MB')
     import io
     try:
-        image=Image.open(io.BytesIO(raw));image.load();image=image.convert('RGB')
+        image=Image.open(io.BytesIO(raw))
+        if image.width*image.height>40_000_000:raise ValueError('Image exceeds 40 megapixels')
+        image.load()
+        from PIL import ImageOps
+        image=ImageOps.exif_transpose(image).convert('RGB')
     except Exception:raise ValueError('Upload a valid image')
     dest=store.node_dir(s,n)/'preview.jpg';dest.parent.mkdir(parents=True,exist_ok=True);image.save(dest,'JPEG',quality=95)
-    def apply(state):state['nodes'][nid].update(output=str(dest.relative_to(store.project_dir(pid))).replace('\\','/'),status='succeeded',progress=100);store.log(state,'Uploaded reference '+n['title'])
+    def apply(state):state['nodes'][nid].update(output=str(dest.relative_to(store.project_dir(pid))).replace('\\','/'),status='succeeded',progress=100);store.log(state,('Set keyframe from computer: ' if n['kind']=='keyframe' else 'Uploaded reference ')+n['title'])
     return store.mutate(pid,apply)
 
 @app.get('/api/projects/{pid}/asset')

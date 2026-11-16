@@ -144,11 +144,15 @@ def edit(pid,nid,updates):
     def action(s):
         n=s['nodes'][nid];old_text=n.get('text','')
         if n['locked'] or n['status'] in ('queued','running'): raise ValueError('Use Redo to unlock a saved box; wait for active work to finish')
-        if n['status']=='succeeded' and any(k in ('prompt','negative','references','dialogue','sound','seconds','production','asset_links') and v!=n.get(k) for k,v in updates.items()):raise ValueError('Use Redo before changing a generated take')
-        allowed={'title','text','prompt','negative','references','dialogue','sound','seconds','production','asset_links'}
+        if n['status']=='succeeded' and any(k in ('prompt','negative','references','dialogue','sound','seconds','production','asset_links','camera_choices') and v!=n.get(k) for k,v in updates.items()):raise ValueError('Use Redo before changing a generated take')
+        allowed={'title','text','prompt','negative','references','dialogue','sound','seconds','production','asset_links','camera_choices'}
         for k,v in updates.items():
             if k not in allowed: continue
-            if k=='asset_links':
+            if k=='camera_choices':
+                from .generation_settings import camera_validate
+                if n['kind'] not in ('keyframe','clip'):raise ValueError('Choose a keyframe or video for camera settings')
+                v=camera_validate(v)
+            elif k=='asset_links':
                 from . import production
                 if any(x['status'] in ('running','queued') and nid in [a['id'] for a in production.ancestors(s,x).values()] for x in s['nodes'].values()):raise ValueError('Stop active work before changing linked character/background references')
                 if not isinstance(v,dict) or set(v)-{'characters','backgrounds'}:raise ValueError('Choose story character/background links')
